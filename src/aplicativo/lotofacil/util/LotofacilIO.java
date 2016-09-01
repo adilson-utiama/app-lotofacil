@@ -30,6 +30,8 @@ public class LotofacilIO {
 				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
+			} finally {
+				lista.close();
 			}
 
 		}

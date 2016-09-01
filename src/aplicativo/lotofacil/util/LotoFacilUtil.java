@@ -158,6 +158,14 @@ public class LotoFacilUtil {
 		
 	}
 	
+	public List<String> getUltimosConcursos(int quant, ConcursosDB banco){
+		List<String> lista = new ArrayList<>();
+		for (int i = banco.concursosCadastrados(); i > banco.concursosCadastrados() - quant; i--) {
+			lista.addAll(new ArrayList(stringParaLista(banco.exibir(i))));
+		}
+		return lista;
+	}
+	
 	/**
 	 * Retorna a frequencia de numeros a partir do ultimo concurso cadastrado.
 	 * @param List<Integer> Jogo a comparar

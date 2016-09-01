@@ -1,14 +1,15 @@
 package aplicativo.lotofacil.util;
 
+import java.util.Collections;
 import java.util.List;
 
 public class LotoFacilFiltros {
 
 	public boolean validaPares(List<Integer> jogo, int limite){
 		if(getPares(jogo) > limite){
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	
@@ -16,9 +17,9 @@ public class LotoFacilFiltros {
 	public boolean validaSomaTotal(List<Integer> jogo, int limiteMinimo, int limiteMaximo){
 		int somaTotal = getSomaTotal(jogo);
 		if(somaTotal < limiteMinimo || somaTotal > limiteMaximo){
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	public int getPares(List<Integer> jogo) {
@@ -45,11 +46,31 @@ public class LotoFacilFiltros {
 		LotoFacilFiltros filtros = new LotoFacilFiltros();
 		boolean b = filtros.validaSomaTotal(jogoAleatorio, 175, 210);
 		boolean c = filtros.validaPares(jogoAleatorio, 9);
-		System.out.println(filtros.getSomaTotal(jogoAleatorio));
-		System.out.println(b);
-		System.out.println(filtros.getPares(jogoAleatorio));
-		System.out.println(c);
-		System.out.println(c && b);
+		boolean rep = filtros.validaRepetidos(jogoAleatorio);
+//		System.out.println(filtros.getSomaTotal(jogoAleatorio));
+//		System.out.println(b);
+//		System.out.println(filtros.getPares(jogoAleatorio));
+//		System.out.println(c);
+//		System.out.println(c && b);
+		System.out.println(rep);
+	}
+
+
+
+	public boolean validaRepetidos(List<Integer> aleatorio) {
+		LotoFacilUtil util = new LotoFacilUtil();
+		int concurso = util.getUltimoConcurso();
+		System.out.println(concurso);
+		List<Integer> ultimoConcurso = util.getConcurso(concurso);
+		System.out.println(ultimoConcurso);
+		System.out.println(aleatorio);
+		int repetidos = 0;
+		for (Integer integer : ultimoConcurso) {
+			repetidos += Collections.frequency(aleatorio, integer);
+		}
+		
+		System.out.println(repetidos);
+		return repetidos > 10 ? true : false;
 	}
 	
 }

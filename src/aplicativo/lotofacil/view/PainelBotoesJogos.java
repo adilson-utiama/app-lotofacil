@@ -1,9 +1,9 @@
 package aplicativo.lotofacil.view;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -49,6 +49,7 @@ public class PainelBotoesJogos extends JPanel{
 	private JButton gerar;
 	private JButton limpar;
 	private JButton salvar;
+	private JButton manual;
 	
 	
 	public PainelBotoesJogos(TabelaModeloLoteria modelo){
@@ -72,6 +73,7 @@ public class PainelBotoesJogos extends JPanel{
 		add(gerar);
 		add(limpar);
 		add(salvar);
+		add(manual);
 		
 	}
 
@@ -87,6 +89,7 @@ public class PainelBotoesJogos extends JPanel{
 		quant.setForeground(Color.WHITE);
 		quantCounterModel = new SpinnerNumberModel(1, 1, 100, 1);
 		quantCounter = new JSpinner(quantCounterModel);
+		quantCounter.setFocusable(false);
 		
 		pares = new JLabel("  Máximo de Pares");
 		pares.setOpaque(true);
@@ -110,6 +113,7 @@ public class PainelBotoesJogos extends JPanel{
 		gerar = new JButton("Gerar (Com Filtro)");
 		limpar = new JButton("Limpar");
 		salvar = new JButton("Salvar Lista");
+		manual = new JButton("Manual");
 		
 		initSizes();
 		initListeners();
@@ -138,19 +142,24 @@ public class PainelBotoesJogos extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				int quantidade = Integer.parseInt(quantCounter.getValue().toString());
 				int maximoPares = Integer.parseInt(paresCounter.getValue().toString());
+				System.out.println(maximoPares);
 				int minimo = Integer.parseInt(somaMinimo.getValue().toString());
+				System.out.println(minimo);
 				int maximo = Integer.parseInt(somaMaximo.getValue().toString());
+				System.out.println(maximo);
 				
 				for(int i = 0; i < quantidade; i++){
 					List<Integer> aleatorio;
 					boolean pares = false;
 					boolean somaTotal = false;
+					boolean repetidos = false;
 					
 					do{
 						aleatorio = util.gerarJogoAleatorio(15);
 						pares = filtros.validaPares(aleatorio, maximoPares);
 						somaTotal = filtros.validaSomaTotal(aleatorio, minimo, maximo);
-					}while(pares || somaTotal);
+						repetidos = filtros.validaRepetidos(aleatorio);
+					}while(pares || somaTotal || repetidos);
 					
 					String saida = util.listaParaString(aleatorio);
 					Jogo jogo = new Jogo(saida);
@@ -208,10 +217,20 @@ public class PainelBotoesJogos extends JPanel{
 					files.salvarLista(all);
 				}
 				
-				
+			
 			}
 		});
 	
+		manual.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			
+				new PainelDeAdicionarNumerosManual(modelo).setVisible(true);
+				
+			}
+			
+		});
 	}
 
 
@@ -232,6 +251,7 @@ public class PainelBotoesJogos extends JPanel{
 		gerarAleatorio.setBounds(10, 330, 150, 40);
 		limpar.setBounds(10, 380, 150, 40);
 		salvar.setBounds(10, 430, 150, 40);
+		manual.setBounds(10, 480, 150, 40);
 		
 	}
 }
